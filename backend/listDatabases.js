@@ -1,0 +1,18 @@
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+dotenv.config();
+
+const listDBs = async () => {
+    try {
+        const client = await mongoose.connect(process.env.MONGODB_URI);
+        const admin = mongoose.connection.db.admin();
+        const dbs = await admin.listDatabases();
+        console.log('Available Databases:');
+        dbs.databases.forEach(db => console.log(` - ${db.name}`));
+        process.exit();
+    } catch (err) {
+        console.error(err);
+        process.exit(1);
+    }
+};
+listDBs();
