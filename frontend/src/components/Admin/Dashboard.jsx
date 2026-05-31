@@ -129,7 +129,9 @@ const AdminDashboard = () => {
             const { data: uploadRes } = await api.post('/media/upload', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
-            const imageUrl = `http://localhost:5000${uploadRes.url}`;
+            
+            const backendUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000';
+            const imageUrl = uploadRes.url.startsWith('http') ? uploadRes.url : `${backendUrl}${uploadRes.url}`;
 
             if (type === 'home') {
                 setData(prev => ({ ...prev, home: { ...prev.home, heroImage: imageUrl } }));
