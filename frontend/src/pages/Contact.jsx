@@ -97,7 +97,7 @@ const Contact = () => {
                 <motion.div
                     initial={{ opacity: 0, x: 30 }}
                     animate={{ opacity: 1, x: 0 }}
-                    className="glass-card p-8 lg:p-12 relative overflow-hidden"
+                    className="glass-card p-6 sm:p-8 lg:p-12 relative overflow-hidden"
                 >
                     {status === 'success' && (
                         <div className="absolute inset-0 bg-dark/90 backdrop-blur-sm z-20 flex flex-col items-center justify-center text-center p-6 animate-fade-in">

@@ -111,7 +111,7 @@ const About = () => {
             {/* Education Section */}
             <section className="space-y-12 pt-32">
                 <h2 className="text-3xl font-bold text-center">Education</h2>
-                <div className="max-w-4xl mx-auto space-y-8 relative before:absolute before:inset-0 before:left-8 before:w-0.5 before:bg-white/10">
+                <div className="max-w-4xl mx-auto space-y-8 relative before:absolute before:inset-0 before:left-4 sm:before:left-8 before:w-0.5 before:bg-white/10">
                     {education.map((edu, index) => (
                         <motion.div
                             key={edu._id}
@@ -119,9 +119,9 @@ const About = () => {
                             whileInView={{ opacity: 1, x: 0 }}
                             transition={{ delay: index * 0.1 }}
                             viewport={{ once: true }}
-                            className="relative pl-20"
+                            className="relative pl-10 sm:pl-20"
                         >
-                            <div className="absolute left-6 top-0 w-4 h-4 rounded-full bg-sky-500 border-4 border-dark" />
+                            <div className="absolute left-2 sm:left-6 top-0 w-4 h-4 rounded-full bg-sky-500 border-4 border-dark" />
                             <div className="glass-card">
                                 <span className="text-sky-400 text-sm font-medium">{edu.period}</span>
                                 <h3 className="text-xl font-bold mt-1">{edu.degree} in {edu.field}</h3>

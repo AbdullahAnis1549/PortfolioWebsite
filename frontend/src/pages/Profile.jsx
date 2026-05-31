@@ -104,8 +104,8 @@ const Profile = () => {
                         </div>
 
                         {/* Profile Header Content */}
-                        <div className="px-10 pb-10 relative">
-                            <div className="flex flex-col md:flex-row items-end gap-8 -mt-20 relative z-10">
+                        <div className="px-6 sm:px-10 pb-6 sm:pb-10 relative">
+                            <div className="flex flex-col md:flex-row items-center md:items-end gap-8 -mt-20 relative z-10">
                                 <div className="relative group">
                                     <div className="absolute -inset-1 bg-gradient-to-r from-sky-500 to-cyan-600 rounded-[2.5rem] blur opacity-50 group-hover:opacity-100 transition duration-500"></div>
                                     <img

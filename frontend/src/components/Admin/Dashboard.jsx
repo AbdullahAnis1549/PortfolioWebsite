@@ -13,7 +13,8 @@ import {
     Save,
     Trash2,
     User,
-    X
+    X,
+    Menu
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -37,6 +38,7 @@ const AdminDashboard = () => {
     const [loading, setLoading] = useState(true);
     const [message, setMessage] = useState('');
     const [editItem, setEditItem] = useState(null);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     useEffect(() => {
         if (!user) {
@@ -162,14 +164,44 @@ const AdminDashboard = () => {
     ];
 
     return (
-        <div className="container mx-auto px-6 py-10 min-h-screen">
-            <div className="flex flex-col lg:flex-row gap-8">
+        <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-10 min-h-screen">
+            {/* Mobile Header Bar */}
+            <div className="lg:hidden flex items-center justify-between p-4 glass rounded-xl mb-6 border border-white/5">
+                <button
+                    onClick={() => setIsSidebarOpen(true)}
+                    className="p-2 text-gray-400 hover:text-white transition-colors"
+                    aria-label="Open menu"
+                >
+                    <Menu size={24} />
+                </button>
+                <h2 className="text-xl font-bold capitalize text-white">{activeTab.replace(/([A-Z])/g, ' $1')} Manager</h2>
+                <div className="w-10"></div>
+            </div>
+
+            <div className="flex flex-col lg:flex-row gap-8 relative">
+                {/* Mobile Drawer Overlay */}
+                {isSidebarOpen && (
+                    <div
+                        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+                        onClick={() => setIsSidebarOpen(false)}
+                    />
+                )}
+
                 {/* Sidebar */}
-                <aside className="w-full lg:w-64 space-y-2">
+                <aside className={`
+                    fixed inset-y-0 left-0 z-50 w-64 glass p-6 transform transition-transform duration-300 lg:relative lg:transform-none lg:p-0 lg:z-0 lg:w-64 space-y-2
+                    ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+                `}>
+                    <div className="flex justify-between items-center lg:hidden mb-6">
+                        <span className="font-bold text-lg text-white">Menu</span>
+                        <button onClick={() => setIsSidebarOpen(false)} className="text-gray-400 hover:text-white" aria-label="Close menu">
+                            <X size={24} />
+                        </button>
+                    </div>
                     {sidebarItems.map(item => (
                         <button
                             key={item.id}
-                            onClick={() => { setActiveTab(item.id); setEditItem(null); }}
+                            onClick={() => { setActiveTab(item.id); setEditItem(null); setIsSidebarOpen(false); }}
                             className={`w-full flex items-center justify-between p-4 rounded-xl transition-all ${activeTab === item.id ? 'bg-sky-600 text-white shadow-lg' : 'glass hover:bg-white/10 text-gray-400'}`}
                         >
                             <div className="flex items-center gap-4">
@@ -189,7 +221,7 @@ const AdminDashboard = () => {
                 </aside>
 
                 {/* Main Content Area */}
-                <main className="flex-1 glass-card p-8 lg:p-10">
+                <main className="flex-grow w-full glass-card p-4 sm:p-8 lg:p-10">
                     <div className="flex justify-between items-center mb-8">
                         <h2 className="text-3xl font-bold capitalize">{activeTab.replace(/([A-Z])/g, ' $1')} Manager</h2>
                         {message && <span className="bg-sky-500/20 text-sky-400 px-4 py-2 rounded-lg text-sm">{message}</span>}
@@ -321,7 +353,7 @@ const AdminDashboard = () => {
                         {activeTab === 'home' && (
                             <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); handleUpdate('/content/home', data.home); }}>
                                 <div className="space-y-6">
-                                    <div className="flex items-center gap-8 p-6 glass rounded-2xl border border-white/5">
+                                    <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8 p-6 glass rounded-2xl border border-white/5 text-center sm:text-left">
                                         <div className="relative group w-32 h-32">
                                             <img
                                                 src={data.home.heroImage || 'https://via.placeholder.com/150'}
@@ -380,7 +412,7 @@ const AdminDashboard = () => {
                                 {editItem && (
                                     <div className="glass p-6 rounded-xl border border-sky-500/30 space-y-4">
                                         <h3 className="font-bold flex justify-between">Add Education <button onClick={() => setEditItem(null)}><X size={18} /></button></h3>
-                                        <div className="grid grid-cols-2 gap-4">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                             <input className="glass bg-white/5 p-2 rounded" placeholder="Institution" onChange={e => setEditItem({ ...editItem, institution: e.target.value })} />
                                             <input className="glass bg-white/5 p-2 rounded" placeholder="Degree" onChange={e => setEditItem({ ...editItem, degree: e.target.value })} />
                                             <input className="glass bg-white/5 p-2 rounded" placeholder="Field" onChange={e => setEditItem({ ...editItem, field: e.target.value })} />
@@ -392,12 +424,12 @@ const AdminDashboard = () => {
                                 )}
                                 <div className="space-y-4">
                                     {data.education.map(edu => (
-                                        <div key={edu._id} className="glass p-4 rounded-lg flex justify-between items-center">
+                                        <div key={edu._id} className="glass p-4 rounded-lg flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                                             <div>
                                                 <h4 className="font-bold">{edu.degree} in {edu.field}</h4>
                                                 <p className="text-sm text-gray-400">{edu.institution} | {edu.period}</p>
                                             </div>
-                                            <button onClick={() => handleDelete('/education', edu._id)} className="text-red-400 hover:text-red-500"><Trash2 size={18} /></button>
+                                            <button onClick={() => handleDelete('/education', edu._id)} className="text-red-400 hover:text-red-500 self-end sm:self-auto"><Trash2 size={18} /></button>
                                         </div>
                                     ))}
                                 </div>
@@ -422,7 +454,7 @@ const AdminDashboard = () => {
                                         <button onClick={() => handleAddItem('/services', editItem)} className="btn-primary w-full py-2">{editItem._id ? 'Update Service' : 'Create Service'}</button>
                                     </div>
                                 )}
-                                <div className="grid grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     {data.services.map(svc => (
                                         <div key={svc._id} className="glass p-4 rounded-lg flex justify-between items-center group">
                                             <div className="flex items-center gap-4">
@@ -447,7 +479,7 @@ const AdminDashboard = () => {
                                 {editItem && (
                                     <div className="glass p-6 rounded-xl border border-sky-500/30 space-y-4">
                                         <h3 className="font-bold flex justify-between">{editItem._id ? 'Edit Skill' : 'Add New Skill'} <button onClick={() => setEditItem(null)}><X size={18} /></button></h3>
-                                        <div className="grid grid-cols-2 gap-4">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                             <input className="glass bg-white/5 p-2 rounded" placeholder="Skill Name" value={editItem.name || ''} onChange={e => setEditItem({ ...editItem, name: e.target.value })} />
                                             <input className="glass bg-white/5 p-2 rounded" placeholder="Category (e.g. Frontend)" value={editItem.category || ''} onChange={e => setEditItem({ ...editItem, category: e.target.value })} />
                                             <input type="number" className="glass bg-white/5 p-2 rounded" placeholder="Proficiency %" value={editItem.proficiency || ''} onChange={e => setEditItem({ ...editItem, proficiency: e.target.value })} />
@@ -455,7 +487,7 @@ const AdminDashboard = () => {
                                         <button onClick={() => handleAddItem('/skills', editItem)} className="btn-primary w-full py-2">{editItem._id ? 'Update Skill' : 'Create Skill'}</button>
                                     </div>
                                 )}
-                                <div className="grid grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     {data.skills.map(skill => (
                                         <div key={skill._id} className="glass p-4 rounded-lg flex justify-between items-center group">
                                             <div>
@@ -479,7 +511,7 @@ const AdminDashboard = () => {
                                 {editItem && (
                                     <div className="glass p-6 rounded-xl border border-sky-500/30 space-y-4">
                                         <h3 className="font-bold flex justify-between">{editItem._id ? 'Edit Project' : 'Add Project'} <button onClick={() => setEditItem(null)}><X size={18} /></button></h3>
-                                        <div className="flex items-center gap-6 p-4 glass rounded-xl border border-white/5">
+                                        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 p-4 glass rounded-xl border border-white/5 text-center sm:text-left">
                                             <div className="relative group w-24 h-24">
                                                 <img
                                                     src={editItem.image || 'https://via.placeholder.com/150'}
@@ -494,7 +526,7 @@ const AdminDashboard = () => {
                                         </div>
                                         <input className="w-full glass bg-white/5 p-2 rounded" placeholder="Project Title" value={editItem.title || ''} onChange={e => setEditItem({ ...editItem, title: e.target.value })} />
                                         <textarea className="w-full glass bg-white/5 p-2 rounded h-20" placeholder="Description" value={editItem.description || ''} onChange={e => setEditItem({ ...editItem, description: e.target.value })} />
-                                        <div className="grid grid-cols-2 gap-4">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                             <input className="glass bg-white/5 p-2 rounded" placeholder="Category" value={editItem.category || ''} onChange={e => setEditItem({ ...editItem, category: e.target.value })} />
                                             <input className="glass bg-white/5 p-2 rounded" placeholder="Tech (comma separated)" value={editItem.technologies?.join(', ') || ''} onChange={e => setEditItem({ ...editItem, technologies: e.target.value.split(',').map(t => t.trim()) })} />
                                             <input className="glass bg-white/5 p-2 rounded" placeholder="GitHub URL" value={editItem.githubUrl || ''} onChange={e => setEditItem({ ...editItem, githubUrl: e.target.value })} />
@@ -526,7 +558,7 @@ const AdminDashboard = () => {
                         {/* CONTACT INFO TAB */}
                         {activeTab === 'contact' && (
                             <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); handleUpdate('/contact/info', data.contactInfo); }}>
-                                <div className="grid grid-cols-2 gap-6">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                     <div>
                                         <label className="text-sm text-gray-400">Email Address</label>
                                         <input className="w-full glass bg-white/5 p-3 rounded-lg outline-none mt-1" value={data.contactInfo.email} onChange={(e) => setData({ ...data, contactInfo: { ...data.contactInfo, email: e.target.value } })} />
@@ -535,7 +567,7 @@ const AdminDashboard = () => {
                                         <label className="text-sm text-gray-400">Phone Number</label>
                                         <input className="w-full glass bg-white/5 p-3 rounded-lg outline-none mt-1" value={data.contactInfo.phone} onChange={(e) => setData({ ...data, contactInfo: { ...data.contactInfo, phone: e.target.value } })} />
                                     </div>
-                                    <div className="col-span-2">
+                                    <div className="col-span-1 sm:col-span-2">
                                         <label className="text-sm text-gray-400">Location</label>
                                         <input className="w-full glass bg-white/5 p-3 rounded-lg outline-none mt-1" value={data.contactInfo.location} onChange={(e) => setData({ ...data, contactInfo: { ...data.contactInfo, location: e.target.value } })} />
                                     </div>
@@ -550,7 +582,7 @@ const AdminDashboard = () => {
                                 {data.messages.length === 0 && <p className="text-center text-gray-500">No messages yet.</p>}
                                 {data.messages.map(msg => (
                                     <div key={msg._id} className="glass p-6 rounded-xl border border-white/5 space-y-4">
-                                        <div className="flex justify-between items-start">
+                                        <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
                                             <div>
                                                 <h4 className="font-bold">{msg.name}</h4>
                                                 <p className="text-sm text-gray-400">{msg.email}</p>
