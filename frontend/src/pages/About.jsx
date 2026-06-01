@@ -97,9 +97,16 @@ const About = () => {
                             viewport={{ once: true }}
                             className="glass-card"
                         >
-                            <div className="w-12 h-12 bg-sky-500/20 rounded-lg flex items-center justify-center mb-6 text-sky-400">
-                                {/* Dynamically render icon or just placeholder */}
-                                <div className="text-2xl">{service.icon || '🚀'}</div>
+                            <div className="w-12 h-12 bg-sky-500/20 rounded-lg flex items-center justify-center mb-6 text-sky-400 overflow-hidden">
+                                {isServiceIconImage(service.icon) ? (
+                                    <img
+                                        src={getServiceIconSrc(service.icon)}
+                                        alt=""
+                                        className="w-full h-full object-cover rounded-lg"
+                                    />
+                                ) : (
+                                    <span className="text-2xl">{service.icon || '🚀'}</span>
+                                )}
                             </div>
                             <h3 className="text-xl font-bold mb-3">{service.title}</h3>
                             <p className="text-gray-400">{service.description}</p>
@@ -135,6 +142,14 @@ const About = () => {
         </div>
     );
 };
+
+const BACKEND_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || '';
+
+const isServiceIconImage = (icon) =>
+    !!icon && (icon.startsWith('http') || icon.startsWith('/uploads'));
+
+const getServiceIconSrc = (icon) =>
+    icon.startsWith('http') ? icon : `${BACKEND_URL}${icon}`;
 
 const Typewriter = ({ text }) => {
     const letters = Array.from(text);

@@ -227,7 +227,14 @@ const AdminDashboard = () => {
                         {message && <span className="bg-sky-500/20 text-sky-400 px-4 py-2 rounded-lg text-sm">{message}</span>}
                         {['skills', 'projects', 'education', 'services'].includes(activeTab) && !editItem && (
                             <button
-                                onClick={() => setEditItem({})}
+                                onClick={() => {
+                                    if (activeTab === 'services') {
+                                        const nextOrder = data.services.reduce((max, s) => Math.max(max, s.order ?? 0), 0) + 1;
+                                        setEditItem({ order: nextOrder });
+                                    } else {
+                                        setEditItem({});
+                                    }
+                                }}
                                 className="btn-primary flex items-center gap-2 py-2 text-sm"
                             >
                                 <Plus size={16} /> Add New
@@ -450,6 +457,14 @@ const AdminDashboard = () => {
                                             <p className="text-xs text-gray-500">Upload service icon/image</p>
                                         </div>
                                         <input className="w-full glass bg-white/5 p-2 rounded" placeholder="Service Title" value={editItem.title || ''} onChange={e => setEditItem({ ...editItem, title: e.target.value })} />
+                                        <input
+                                            type="number"
+                                            min="1"
+                                            className="w-full glass bg-white/5 p-2 rounded"
+                                            placeholder="Display order (1 = first)"
+                                            value={editItem.order ?? ''}
+                                            onChange={e => setEditItem({ ...editItem, order: e.target.value === '' ? undefined : Number(e.target.value) })}
+                                        />
                                         <textarea className="w-full glass bg-white/5 p-2 rounded h-20" placeholder="Description" value={editItem.description || ''} onChange={e => setEditItem({ ...editItem, description: e.target.value })} />
                                         <button onClick={() => handleAddItem('/services', editItem)} className="btn-primary w-full py-2">{editItem._id ? 'Update Service' : 'Create Service'}</button>
                                     </div>
@@ -458,10 +473,17 @@ const AdminDashboard = () => {
                                     {data.services.map(svc => (
                                         <div key={svc._id} className="glass p-4 rounded-lg flex justify-between items-center group">
                                             <div className="flex items-center gap-4">
-                                                <div className="w-10 h-10 bg-sky-500/10 rounded flex items-center justify-center text-xl">
-                                                    {svc.icon && svc.icon.startsWith('http') ? <img src={svc.icon} className="w-full h-full object-cover rounded" /> : '🚀'}
+                                                <div className="w-10 h-10 bg-sky-500/10 rounded flex items-center justify-center text-xl overflow-hidden">
+                                                    {svc.icon && (svc.icon.startsWith('http') || svc.icon.startsWith('/uploads'))
+                                                        ? <img src={svc.icon.startsWith('http') ? svc.icon : `${import.meta.env.VITE_API_URL?.replace('/api', '') || ''}${svc.icon}`} alt="" className="w-full h-full object-cover rounded" />
+                                                        : (svc.icon || '🚀')}
                                                 </div>
-                                                <span className="font-bold">{svc.title}</span>
+                                                <div>
+                                                    <span className="font-bold">{svc.title}</span>
+                                                    {svc.order != null && (
+                                                        <p className="text-xs text-gray-500">Order: {svc.order}</p>
+                                                    )}
+                                                </div>
                                             </div>
                                             <div className="flex gap-2">
                                                 <button onClick={() => setEditItem(svc)} className="text-gray-400 hover:text-sky-400 opacity-0 group-hover:opacity-100 transition-all"><Edit2 size={18} /></button>

@@ -2,7 +2,7 @@ const Service = require('../models/Service');
 
 const getServices = async (req, res) => {
     try {
-        const services = await Service.find().sort('order');
+        const services = await Service.find().sort({ order: 1, _id: 1 });
         res.json(services);
     } catch (error) {
         res.status(500).json({ message: error.message });
