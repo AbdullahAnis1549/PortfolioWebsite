@@ -97,17 +97,19 @@ const About = () => {
                             viewport={{ once: true }}
                             className="glass-card"
                         >
-                            <div className="w-12 h-12 bg-sky-500/20 rounded-lg flex items-center justify-center mb-6 text-sky-400 overflow-hidden">
-                                {isServiceIconImage(service.icon) ? (
+                            {isServiceIconImage(service.icon) ? (
+                                <div className="w-full h-40 sm:h-44 rounded-xl overflow-hidden mb-6 bg-sky-500/10 border border-white/10">
                                     <img
                                         src={getServiceIconSrc(service.icon)}
-                                        alt=""
-                                        className="w-full h-full object-cover rounded-lg"
+                                        alt={service.title}
+                                        className="w-full h-full object-cover"
                                     />
-                                ) : (
-                                    <span className="text-2xl">{service.icon || '🚀'}</span>
-                                )}
-                            </div>
+                                </div>
+                            ) : (
+                                <div className="w-14 h-14 bg-sky-500/20 rounded-xl flex items-center justify-center mb-6 text-sky-400">
+                                    <span className="text-3xl">{service.icon || '🚀'}</span>
+                                </div>
+                            )}
                             <h3 className="text-xl font-bold mb-3">{service.title}</h3>
                             <p className="text-gray-400">{service.description}</p>
                         </motion.div>
