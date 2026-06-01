@@ -98,11 +98,11 @@ const About = () => {
                             className="glass-card"
                         >
                             {isServiceIconImage(service.icon) ? (
-                                <div className="w-full h-40 sm:h-44 rounded-xl overflow-hidden mb-6 bg-sky-500/10 border border-white/10">
+                                <div className="w-full h-44 sm:h-48 rounded-xl mb-6 bg-sky-500/10 border border-white/10 flex items-center justify-center p-4">
                                     <img
                                         src={getServiceIconSrc(service.icon)}
                                         alt={service.title}
-                                        className="w-full h-full object-cover"
+                                        className="max-w-full max-h-full w-auto h-auto object-contain"
                                     />
                                 </div>
                             ) : (
