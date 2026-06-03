@@ -50,9 +50,9 @@ const Home = () => {
                 </div>
 
                 <div className="flex items-center gap-6 pt-8 text-gray-400">
-                    <a href="#" className="hover:text-white transition-colors"><Github size={24} /></a>
-                    <a href="#" className="hover:text-white transition-colors"><Linkedin size={24} /></a>
-                    <a href="#" className="hover:text-white transition-colors"><Mail size={24} /></a>
+                    <a href="https://github.com/AbdullahAnis1549" className="hover:text-white transition-colors"><Github size={24} /></a>
+                    <a href="https://www.linkedin.com/in/abdullah-anis-549648368?utm_source=share_via&utm_content=profile&utm_medium=member_android" className="hover:text-white transition-colors"><Linkedin size={24} /></a>
+                    
                 </div>
             </motion.div>
 
