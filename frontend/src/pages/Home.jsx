@@ -69,6 +69,8 @@ const Home = () => {
                     <img
                         src={content.heroImage || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=800&q=80'}
                         alt="Profile"
+                        fetchPriority="high"
+                        decoding="async"
                         className="w-full h-full object-cover rounded-[3rem] relative z-10 glass-card p-0"
                     />
                 </div>
